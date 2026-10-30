@@ -1,0 +1,19 @@
+baseURL = 'http://localhost:8080/'
+defaultContentLanguage = 'de'
+title = 'WG-Kalender'
+[build]
+  writeStats = false
+
+[security]
+  [security.funcs]
+    getenv = ['^HUGO_', '^CI$', '^SITE_TITLE$']
+
+[languages]
+  [languages.de]
+    locale = 'de-DE'
+    label = 'Deutsch'
+    weight = 1
+  [languages.en]
+    locale = 'en-US'
+    label = 'English'
+    weight = 2

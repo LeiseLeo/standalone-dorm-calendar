@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="{{ .Site.Language.LanguageCode }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f9">
+  <meta name="description" content="{{ i18n "intro_subheading" }}">
+  <title>WG-Kalender</title>
+  {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+  {{ $js := resources.Get "js/app.js" | fingerprint }}
+  <script type="module" src="{{ $js.RelPermalink }}" defer></script>
+</head>
+<body>
+  <main class="shell">
+    {{ partial "header.html" . }}
+    {{ block "main" . }}{{ end }}
+  </main>
+</body>
+</html>

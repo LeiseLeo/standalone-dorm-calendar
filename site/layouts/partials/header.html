@@ -1,0 +1,19 @@
+<header class="topbar">
+  {{ $siteTitle := getenv "SITE_TITLE" | default .Site.Title }}
+  <a class="brand" href="{{ "/" | relLangURL }}" aria-label="{{ $siteTitle }}"><span>{{ $siteTitle }}</span></a>
+  <div class="header-actions">
+    <button id="header-menu-toggle" class="button button-quiet header-menu-toggle" type="button" aria-expanded="false" aria-controls="header-menu" aria-label="{{ i18n "header_menu" }}">☰</button>
+    <div id="header-menu" class="header-menu">
+      <nav class="language-switcher" aria-label="{{ i18n "language_switch" }}">
+        {{ range .Site.Languages }}
+          {{ $path := "/" }}
+          {{ if eq .Lang "en" }}{{ $path = "/en/" }}{{ end }}
+          <a href="{{ $path | relURL }}" class="{{ if eq .Lang $.Site.Language.Lang }}active{{ end }}">{{ if eq .Lang "de" }}DE{{ else }}EN{{ end }}</a>
+        {{ end }}
+      </nav>
+      <button id="theme-toggle" class="button button-quiet theme-toggle" type="button" aria-label="{{ i18n "theme_dark" }}" title="{{ i18n "theme_dark" }}">◐</button>
+      <span id="connection-status" class="status status-muted"><i></i> {{ i18n "connection_status_disconnected" }}</span>
+      <button id="settings-button" class="button button-quiet" type="button">{{ i18n "connection" }}</button>
+    </div>
+  </div>
+</header>

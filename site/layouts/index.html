@@ -1,0 +1,21 @@
+{{ define "main" }}
+  {{ partial "intro.html" . }}
+  {{ partial "subscribe.html" . }}
+
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">{{ i18n "calendar_overview" }}</p>
+      <h2>{{ i18n "categories_title" }}</h2>
+    </div>
+    <button id="refresh-button" class="button button-outline" type="button" disabled><span aria-hidden="true">↻</span> {{ i18n "refresh" }}</button>
+  </div>
+  <div id="error-banner" class="error-banner" role="alert" hidden></div>
+  <div id="loading" class="loading-state"><span class="spinner"></span><span>{{ i18n "loading" }}</span></div>
+  <section id="categories" class="categories" aria-live="polite"></section>
+
+  {{ partial "footer.html" . }}
+  {{ partial "dialogs/connection.html" . }}
+  {{ partial "dialogs/event.html" . }}
+  {{ partial "dialogs/confirm.html" . }}
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+{{ end }}

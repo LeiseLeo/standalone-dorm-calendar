@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+
+# Hugo output and build state
+site/site/public/
+site/.hugo_build.lock
+
+# Local Baikal data
+baikal-data/
+
+# Operating-system files
+.DS_Store
+Thumbs.db

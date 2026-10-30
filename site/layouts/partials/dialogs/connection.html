@@ -1,0 +1,12 @@
+<dialog id="connection-dialog" class="dialog">
+  <form id="connection-form" method="dialog">
+    <div class="dialog-heading"><div><p class="eyebrow">{{ i18n "caldav_account" }}</p><h2>{{ i18n "connect_to_baikal" }}</h2></div><button class="icon-button" type="button" data-close="connection-dialog" aria-label="{{ i18n "cancel" }}">×</button></div>
+    <p class="dialog-description">{{ i18n "connection_description" | safeHTML }}</p>
+    <label>{{ i18n "username" }}<input id="username" name="username" autocomplete="username" required placeholder="{{ i18n "username_placeholder" }}"></label>
+    <label>{{ i18n "password" }}<input id="password" name="password" type="password" autocomplete="current-password" required></label>
+    <label>{{ i18n "calendar_name" }}<input id="calendar-name" name="calendarName" value="default" required></label>
+    <label>{{ i18n "caldav_base_url" }}<input id="caldav-url" name="caldavUrl" value="/dav.php/" required></label>
+    <div class="security-note"><strong>{{ i18n "security_note" }}</strong> {{ i18n "security_description" }}</div>
+    <div class="dialog-actions"><button class="button button-outline" type="button" data-close="connection-dialog">{{ i18n "cancel" }}</button><button class="button button-dark" type="submit">{{ i18n "connect" }}</button></div>
+  </form>
+</dialog>
