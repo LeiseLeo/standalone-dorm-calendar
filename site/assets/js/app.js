@@ -193,44 +193,45 @@ function buildIcs(form, uid) {
 }
 function openEventDialog(categoryId, event = null) {
   const category = CATEGORIES.find(c => c.id === categoryId); if (!category) return;
-  $('event-form').reset(); $('event-category').value = categoryId; $('event-href').value = event?.href || '';
-  $('event-eyebrow').textContent = event ? (locale === 'en' ? 'EDIT ENTRY' : 'EINTRAG BEARBEITEN') : (locale === 'en' ? category.title.toUpperCase() : category.title.toUpperCase());
-  $('event-dialog-title').textContent = event ? t('editEntry') : categoryId === 'Geburtstage' ? t('birthday') : t('addEvent');
-  $('event-title').placeholder = categoryId === 'Geburtstage' ? t('birthdayPlaceholder') : t('eventPlaceholder');
-  $('event-title').value = event?.title || ''; $('event-description').value = event?.description || '';
+  const isBirthday = categoryId === 'Geburtstage';
+  const prefix = isBirthday ? 'birthday' : 'organizational';
+  const dialog = $(`${prefix}-dialog`);
+  $(`${prefix}-form`).reset(); $(`${prefix}-category`).value = categoryId; $(`${prefix}-href`).value = event?.href || '';
+  $(`${prefix}-eyebrow`).textContent = event ? (locale === 'en' ? 'EDIT ENTRY' : 'EINTRAG BEARBEITEN') : category.title.toUpperCase();
+  $(`${prefix}-dialog-title`).textContent = event ? t('editEntry') : isBirthday ? t('birthday') : t('addEvent');
+  $(`${prefix}-title`).value = event?.title || ''; $(`${prefix}-description`).value = event?.description || '';
   const start = event?.date || new Date().toISOString().slice(0,10);
-  $('event-start').value = start; $('event-start-detail').value = start;
-  $('event-end').value = event?.endDate || start;
-  $('event-all-day').checked = event ? event.dateOnly : true;
-  $('event-start-time').value = event?.startTime || '09:00'; $('event-end-time').value = event?.endTime || '10:00';
-  $('event-repeating').checked = event?.repeating || false; $('event-frequency').value = event?.frequency || 'WEEKLY';
-  $('event-yearly').checked = event?.yearly || categoryId === 'Geburtstage';
-  $('birthday-repeat-row').hidden = categoryId !== 'Geburtstage';
-  $('birthday-date-row').hidden = categoryId !== 'Geburtstage';
-  $('event-detailed-fields').hidden = categoryId === 'Geburtstage';
-  $('event-start').required = categoryId === 'Geburtstage';
-  $('event-start-detail').required = categoryId !== 'Geburtstage';
-  $('event-end').required = categoryId !== 'Geburtstage';
-  $('event-frequency-row').hidden = !$('event-repeating').checked;
-  $('event-time-row').hidden = $('event-all-day').checked;
-  $('event-dialog').showModal();
+  if (isBirthday) {
+    $('birthday-date').value = start;
+    $('birthday-yearly').checked = event ? event.yearly : true;
+  } else {
+    $('organizational-start').value = start; $('organizational-end').value = event?.endDate || start;
+    $('organizational-all-day').checked = event?.dateOnly === true;
+    $('organizational-start-time').value = event?.startTime || '09:00'; $('organizational-end-time').value = event?.endTime || '10:00';
+    $('organizational-single').checked = event ? !event.repeating : true; $('organizational-frequency').value = event?.frequency || 'WEEKLY';
+    updateOrganizationalDialogVisibility();
+  }
+  dialog.showModal();
 }
-async function saveEvent(event) {
-  event.preventDefault(); const category = $('event-category').value;
-  const isBirthday = category === 'Geburtstage';
-  const form = { title: $('event-title').value.trim(), description: $('event-description').value.trim(), category, start: isBirthday ? $('event-start').value : $('event-start-detail').value, end: isBirthday ? $('event-start').value : $('event-end').value, allDay: isBirthday || $('event-all-day').checked, startTime: $('event-start-time').value, endTime: $('event-end-time').value, repeating: isBirthday || $('event-repeating').checked, frequency: isBirthday ? 'YEARLY' : $('event-frequency').value };
+function updateOrganizationalDialogVisibility() {
+  $('organizational-time-row').hidden = $('organizational-all-day').checked;
+  $('organizational-frequency-row').hidden = $('organizational-single').checked;
+}
+async function saveEvent(event, isBirthday) {
+  event.preventDefault(); const prefix = isBirthday ? 'birthday' : 'organizational'; const category = $(`${prefix}-category`).value;
+  const form = { title: $(`${prefix}-title`).value.trim(), description: $(`${prefix}-description`).value.trim(), category, start: isBirthday ? $('birthday-date').value : $('organizational-start').value, end: isBirthday ? $('birthday-date').value : $('organizational-end').value, allDay: isBirthday || $('organizational-all-day').checked, startTime: isBirthday ? '' : $('organizational-start-time').value, endTime: isBirthday ? '' : $('organizational-end-time').value, repeating: isBirthday ? $('birthday-yearly').checked : !$('organizational-single').checked, frequency: isBirthday ? 'YEARLY' : $('organizational-frequency').value };
   if (!form.title || !form.start || !form.end || (!form.allDay && (!form.startTime || !form.endTime))) return;
   if (form.end < form.start || (!form.allDay && form.end === form.start && form.endTime <= form.startTime)) {
     showError(locale === 'de' ? 'Bitte prüfe Zeitraum und Uhrzeiten.' : 'Please check the date range and times.');
     return;
   }
-  const oldHref = $('event-href').value; const old = state.events.find(e => e.href === oldHref);
+  const oldHref = $(`${prefix}-href`).value; const old = state.events.find(e => e.href === oldHref);
   const uid = old?.uid || `${crypto.randomUUID()}@wg-calendar`;
   const ics = buildIcs(form, uid);
   try {
     const href = oldHref || `${state.calendarHref}${encodeURIComponent(uid)}.ics`;
     await davRequest(href, 'PUT', ics, { 'Content-Type': 'text/calendar; charset=utf-8', ...(old ? { 'If-Match': '*' } : { 'If-None-Match': '*' }) });
-    $('event-dialog').close(); toast(old ? t('updated') : t('added')); await loadEvents();
+    $(`${prefix}-dialog`).close(); toast(old ? t('updated') : t('added')); await loadEvents();
   } catch (error) { showError(error.message); }
 }
 async function deleteEvent(event) { event.preventDefault(); const href = $('delete-href').value; try { await davRequest(href, 'DELETE'); $('confirm-dialog').close(); toast(t('deleted')); await loadEvents(); } catch (error) { showError(error.message); } }
@@ -242,11 +243,8 @@ $('connection-form').addEventListener('submit', async e => {
   e.preventDefault(); state.username = $('username').value.trim(); state.password = $('password').value; state.calendarName = $('calendar-name').value.trim(); state.caldavUrl = $('caldav-url').value.trim();
   try { await connect(); saveConnection(); $('connection-dialog').close(); toast(t('connectionEstablished')); } catch (error) { state.connected = false; setConnectionStatus('error', t('disconnected')); showError(error.message); }
 });
-$('event-form').addEventListener('submit', saveEvent); $('confirm-form').addEventListener('submit', deleteEvent);
-[$('event-all-day'), $('event-repeating')].forEach(input => input.addEventListener('change', () => {
-  $('event-time-row').hidden = $('event-all-day').checked;
-  $('event-frequency-row').hidden = !$('event-repeating').checked;
-}));
+$('birthday-form').addEventListener('submit', event => saveEvent(event, true)); $('organizational-form').addEventListener('submit', event => saveEvent(event, false)); $('confirm-form').addEventListener('submit', deleteEvent);
+[$('organizational-all-day'), $('organizational-single')].forEach(input => input.addEventListener('change', updateOrganizationalDialogVisibility));
 $('settings-button').addEventListener('click', showConnectionDialog);
 $('header-menu-toggle').addEventListener('click', () => {
   const menu = $('header-menu');

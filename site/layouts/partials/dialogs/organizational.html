@@ -1,0 +1,19 @@
+<dialog id="organizational-dialog" class="dialog">
+  <form id="organizational-form" method="dialog">
+    <div class="dialog-heading"><div><p class="eyebrow" id="organizational-eyebrow">{{ i18n "new_entry" }}</p><h2 id="organizational-dialog-title">{{ i18n "add_event" }}</h2></div><button class="icon-button" type="button" data-close="organizational-dialog" aria-label="{{ i18n "cancel" }}">×</button></div>
+    <input type="hidden" id="organizational-href">
+    <input type="hidden" id="organizational-category">
+    <label>{{ i18n "title" }}<input id="organizational-title" required maxlength="120" placeholder="{{ i18n "event_placeholder" }}"></label>
+    <label>{{ i18n "start_date" }}<input id="organizational-start" type="date" required></label>
+    <label>{{ i18n "end_date" }}<input id="organizational-end" type="date" required></label>
+    <label id="organizational-all-day-row" class="check-row"><input id="organizational-all-day" type="checkbox"><span>{{ i18n "all_day" }}</span></label>
+    <div id="organizational-time-row" class="form-grid">
+      <label>{{ i18n "start_time" }}<input id="organizational-start-time" type="time"></label>
+      <label>{{ i18n "end_time" }}<input id="organizational-end-time" type="time"></label>
+    </div>
+    <label class="check-row"><input id="organizational-single" type="checkbox" checked><span>{{ i18n "single_event" }}</span></label>
+    <label id="organizational-frequency-row" hidden>{{ i18n "repeat_frequency" }}<select id="organizational-frequency"><option value="DAILY">{{ i18n "frequency_daily" }}</option><option value="WEEKLY" selected>{{ i18n "frequency_weekly" }}</option><option value="MONTHLY">{{ i18n "frequency_monthly" }}</option><option value="YEARLY">{{ i18n "frequency_yearly" }}</option></select></label>
+    <label>{{ i18n "event_description" }} <span class="optional">{{ i18n "optional" }}</span><textarea id="organizational-description" rows="3" maxlength="2000" placeholder="{{ i18n "description_placeholder" }}"></textarea></label>
+    <div class="dialog-actions"><button class="button button-outline" type="button" data-close="organizational-dialog">{{ i18n "cancel" }}</button><button class="button button-dark" type="submit">{{ i18n "save" }}</button></div>
+  </form>
+</dialog>

@@ -201,9 +201,9 @@ function openEventDialog(categoryId, event = null) {
   const start = event?.date || new Date().toISOString().slice(0,10);
   $('event-start').value = start; $('event-start-detail').value = start;
   $('event-end').value = event?.endDate || start;
-  $('event-all-day').checked = event ? event.dateOnly : true;
+  $('event-all-day').checked = event ? event.dateOnly : false;
   $('event-start-time').value = event?.startTime || '09:00'; $('event-end-time').value = event?.endTime || '10:00';
-  $('event-repeating').checked = event?.repeating || false; $('event-frequency').value = event?.frequency || 'WEEKLY';
+  $('event-single').checked = event ? !event.repeating : true; $('event-frequency').value = event?.frequency || 'WEEKLY';
   $('event-yearly').checked = event?.yearly || categoryId === 'Geburtstage';
   $('birthday-repeat-row').hidden = categoryId !== 'Geburtstage';
   $('birthday-date-row').hidden = categoryId !== 'Geburtstage';
@@ -211,14 +211,17 @@ function openEventDialog(categoryId, event = null) {
   $('event-start').required = categoryId === 'Geburtstage';
   $('event-start-detail').required = categoryId !== 'Geburtstage';
   $('event-end').required = categoryId !== 'Geburtstage';
-  $('event-frequency-row').hidden = !$('event-repeating').checked;
-  $('event-time-row').hidden = $('event-all-day').checked;
+  updateEventDialogVisibility();
   $('event-dialog').showModal();
+}
+function updateEventDialogVisibility() {
+  $('event-time-row').hidden = $('event-all-day').checked;
+  $('event-frequency-row').hidden = $('event-single').checked;
 }
 async function saveEvent(event) {
   event.preventDefault(); const category = $('event-category').value;
   const isBirthday = category === 'Geburtstage';
-  const form = { title: $('event-title').value.trim(), description: $('event-description').value.trim(), category, start: isBirthday ? $('event-start').value : $('event-start-detail').value, end: isBirthday ? $('event-start').value : $('event-end').value, allDay: isBirthday || $('event-all-day').checked, startTime: $('event-start-time').value, endTime: $('event-end-time').value, repeating: isBirthday || $('event-repeating').checked, frequency: isBirthday ? 'YEARLY' : $('event-frequency').value };
+  const form = { title: $('event-title').value.trim(), description: $('event-description').value.trim(), category, start: isBirthday ? $('event-start').value : $('event-start-detail').value, end: isBirthday ? $('event-start').value : $('event-end').value, allDay: isBirthday || $('event-all-day').checked, startTime: $('event-start-time').value, endTime: $('event-end-time').value, repeating: isBirthday || !$('event-single').checked, frequency: isBirthday ? 'YEARLY' : $('event-frequency').value };
   if (!form.title || !form.start || !form.end || (!form.allDay && (!form.startTime || !form.endTime))) return;
   if (form.end < form.start || (!form.allDay && form.end === form.start && form.endTime <= form.startTime)) {
     showError(locale === 'de' ? 'Bitte prüfe Zeitraum und Uhrzeiten.' : 'Please check the date range and times.');
@@ -243,10 +246,7 @@ $('connection-form').addEventListener('submit', async e => {
   try { await connect(); saveConnection(); $('connection-dialog').close(); toast(t('connectionEstablished')); } catch (error) { state.connected = false; setConnectionStatus('error', t('disconnected')); showError(error.message); }
 });
 $('event-form').addEventListener('submit', saveEvent); $('confirm-form').addEventListener('submit', deleteEvent);
-[$('event-all-day'), $('event-repeating')].forEach(input => input.addEventListener('change', () => {
-  $('event-time-row').hidden = $('event-all-day').checked;
-  $('event-frequency-row').hidden = !$('event-repeating').checked;
-}));
+[$('event-all-day'), $('event-single')].forEach(input => input.addEventListener('change', updateEventDialogVisibility));
 $('settings-button').addEventListener('click', showConnectionDialog);
 $('header-menu-toggle').addEventListener('click', () => {
   const menu = $('header-menu');
