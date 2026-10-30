@@ -26,6 +26,8 @@ services:
       args:
         SITE_TITLE: ${SITE_TITLE:?Set SITE_TITLE in .env}
         SITE_URL: ${SITE_URL:?Set SITE_URL in .env}
+    environment:
+      BAIKAL_PUBLIC_AUTH: ${BAIKAL_PUBLIC_AUTH}
     container_name: wg-calendar-web
     restart: unless-stopped
     depends_on:

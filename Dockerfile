@@ -10,4 +10,4 @@ RUN hugo --minify --baseURL "$SITE_URL"
 
 FROM nginx:1.27-alpine
 COPY --from=build /src/public/ /usr/share/nginx/html/
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY nginx/default.conf /etc/nginx/templates/default.conf.template
