@@ -57,6 +57,7 @@ Wenn bereits eine Konfiguration existiert, bleibt die Datenbank erhalten. Beim e
 
 - Basic Authentication überträgt Zugangsdaten nur dann sicher, wenn HTTPS verwendet wird. Die lokale HTTP-Konfiguration ist ausschließlich für Tests auf demselben Rechner gedacht.
 - Vor öffentlicher Bereitstellung HTTPS aktivieren.
+- Das Frontend speichert die CalDAV-Zugangsdaten im `localStorage`, damit die Anmeldung tabübergreifend erhalten bleibt. Lösche die Website-Daten des Browsers, wenn die Anmeldung entfernt werden soll.
 - `.env` enthält Klartext-Passwörter und darf nicht in Git eingecheckt werden.
 - Baïkal-Admin-Benutzername ist fest `admin`; Baïkal bietet hierfür keine frei konfigurierbare Admin-Username-Variable.
 - Der Button „Dashboard teilen“ erzeugt einen Einladungslink mit den Zugangsdaten im URL-Fragment. Das Fragment wird nicht an den Server übertragen und nach der automatischen Anmeldung aus der sichtbaren URL entfernt. Teile solche Links nur mit vertrauenswürdigen Personen und verwende HTTPS.

@@ -11,7 +11,7 @@ const CATEGORIES = [
 ];
 const $ = (id) => document.getElementById(id);
 const state = { username: '', password: '', calendarName: 'default', caldavUrl: '/dav.php/', calendarHref: '', events: [], connected: false, toastTimer: null, birthdaySearch: '', birthdayMonth: '', nextEventIndex: 0 };
-const SESSION_KEY = 'wg-calendar-connection';
+const CONNECTION_KEY = 'wg-calendar-connection';
 
 function escapeHtml(value = '') { return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function utf8Base64(value) { const bytes = new TextEncoder().encode(value); let binary = ''; bytes.forEach(b => binary += String.fromCharCode(b)); return btoa(binary); }
@@ -19,7 +19,7 @@ function absoluteUrl(path) { return new URL(path, window.location.origin).toStri
 function normalizePath(path) { return path.endsWith('/') ? path : `${path}/`; }
 function authHeaders(extra = {}) { return { Authorization: `Basic ${utf8Base64(`${state.username}:${state.password}`)}`, ...extra }; }
 function loadConnection() {
-  const saved = sessionStorage.getItem(SESSION_KEY);
+  const saved = localStorage.getItem(CONNECTION_KEY) || sessionStorage.getItem(CONNECTION_KEY);
   if (!saved) return false;
   try {
     const connection = JSON.parse(saved);
@@ -28,14 +28,16 @@ function loadConnection() {
     state.password = connection.password;
     state.calendarName = connection.calendarName || 'default';
     state.caldavUrl = connection.caldavUrl || '/dav.php/';
+    if (!localStorage.getItem(CONNECTION_KEY)) saveConnection();
     return true;
   } catch {
-    sessionStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(CONNECTION_KEY);
+    sessionStorage.removeItem(CONNECTION_KEY);
     return false;
   }
 }
 function saveConnection() {
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+  localStorage.setItem(CONNECTION_KEY, JSON.stringify({
     username: state.username,
     password: state.password,
     calendarName: state.calendarName,
