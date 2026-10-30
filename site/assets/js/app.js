@@ -10,7 +10,7 @@ const CATEGORIES = [
   { id: 'Offizielle Wohnheimtermine', title: t('official'), symbol: '⌂', tint: '#eaf5ef', color: '#4b9872' },
 ];
 const $ = (id) => document.getElementById(id);
-const state = { username: '', password: '', calendarName: 'default', caldavUrl: '/dav.php/', calendarHref: '', events: [], connected: false, toastTimer: null, birthdaySearch: '', birthdayMonth: '' };
+const state = { username: '', password: '', calendarName: 'default', caldavUrl: '/dav.php/', calendarHref: '', events: [], connected: false, toastTimer: null, birthdaySearch: '', birthdayMonth: '', nextEventIndex: 0 };
 const SESSION_KEY = 'wg-calendar-connection';
 
 function escapeHtml(value = '') { return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -80,6 +80,7 @@ async function loadEvents() {
       const event = parseIcs(data); if (!event) return null;
       return { ...event, href: new URL(href, state.calendarHref).toString(), ics: data };
     }).filter(Boolean);
+    state.nextEventIndex = -1;
     renderCategories();
   } catch (error) { showError(error.message); if (!state.connected) setConnectionStatus('error', t('connectionError')); }
   finally { $('loading').hidden = true; }
@@ -110,6 +111,18 @@ function nextBirthdayDate(dateString) {
   return next;
 }
 function eventSortDate(event) { return event.yearly ? nextBirthdayDate(event.date) || new Date(event.date) : new Date(`${event.date}T${event.startTime || '00:00'}`); }
+function sortedEvents() { return state.events.filter(event => !Number.isNaN(eventSortDate(event).getTime())).sort((a, b) => eventSortDate(a) - eventSortDate(b)); }
+function isPastEvent(event) {
+  const date = eventSortDate(event);
+  if (Number.isNaN(date.getTime())) return false;
+  if (event.yearly || event.dateOnly) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
+    return date < today;
+  }
+  return date < new Date();
+}
 function formatEventDate(event) {
   const date = event.yearly ? nextBirthdayDate(event.date) : new Date(`${event.date}T12:00:00`);
   if (!date || Number.isNaN(date.getTime())) return t('unknownDate');
@@ -119,6 +132,25 @@ function formatEventDate(event) {
   if (!event.dateOnly && event.startTime) text += ` · ${event.startTime}${event.endTime ? `–${event.endTime}` : ''}`;
   if (event.yearly) text += ` · ${t('yearly')}`;
   return text;
+}
+function categoryForEvent(event) { return CATEGORIES.find(category => category.id === event.category) || CATEGORIES[1]; }
+function renderNextEvent() {
+  const events = sortedEvents();
+  const upcomingIndex = events.findIndex(event => !isPastEvent(event));
+  if (!events.length) {
+    $('next-event-content').innerHTML = `<div class="empty-state">${t('empty')}</div>`;
+    $('event-position').textContent = '';
+    $('previous-event').disabled = true;
+    $('next-event').disabled = true;
+    return;
+  }
+  if (state.nextEventIndex < 0 || state.nextEventIndex >= events.length) state.nextEventIndex = upcomingIndex === -1 ? events.length - 1 : upcomingIndex;
+  const event = events[state.nextEventIndex];
+  const category = categoryForEvent(event);
+  $('event-position').textContent = `${state.nextEventIndex + 1} / ${events.length}`;
+  $('previous-event').disabled = state.nextEventIndex === 0;
+  $('next-event').disabled = state.nextEventIndex === events.length - 1;
+  $('next-event-content').innerHTML = `<article class="next-event ${isPastEvent(event) ? 'is-past' : ''}"><div class="next-event-date"><strong>${escapeHtml(formatEventDate(event))}</strong><span>${isPastEvent(event) ? '· ' + (locale === 'de' ? 'vergangen' : 'past') : ''}</span></div><div class="next-event-main"><strong>${escapeHtml(event.title)}</strong>${event.description ? `<p>${escapeHtml(event.description)}</p>` : ''}<span class="category-label" style="background:${category.tint};color:${category.color}"><span aria-hidden="true">${category.symbol}</span> ${escapeHtml(category.title)}</span></div></article>`;
 }
 function renderCategories() {
   $('categories').innerHTML = CATEGORIES.map(category => {
@@ -136,13 +168,14 @@ function renderCategories() {
       const date = event.yearly ? nextBirthdayDate(event.date) : new Date(`${event.date}T12:00:00`);
       const day = date && !Number.isNaN(date.getTime()) ? new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'de-DE',{day:'2-digit'}).format(date) : '–';
       const month = date && !Number.isNaN(date.getTime()) ? new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'de-DE',{month:'short'}).format(date).replace('.','') : '–';
-      return `<article class="event-row"><div class="event-date"><strong>${day}</strong><span>${month}</span></div><div class="event-main"><strong>${escapeHtml(event.title)}</strong><small>${escapeHtml(formatEventDate(event))}${event.description ? ` · ${escapeHtml(event.description)}` : ''}</small></div><div class="event-actions"><button class="icon-button" type="button" data-edit="${escapeHtml(event.href)}" aria-label="${escapeHtml(event.title)} ${t('edit')}" title="${t('edit')}">✎</button><button class="icon-button delete" type="button" data-delete="${escapeHtml(event.href)}" aria-label="${escapeHtml(event.title)} ${t('delete')}" title="${t('delete')}">×</button></div></article>`;
+      return `<article class="event-row ${isPastEvent(event) ? 'is-past' : ''}"><div class="event-date"><strong>${day}</strong><span>${month}</span></div><div class="event-main"><strong>${escapeHtml(event.title)}</strong><small>${escapeHtml(formatEventDate(event))}${event.description ? ` · ${escapeHtml(event.description)}` : ''}</small></div><div class="event-actions"><button class="icon-button" type="button" data-edit="${escapeHtml(event.href)}" aria-label="${escapeHtml(event.title)} ${t('edit')}" title="${t('edit')}">✎</button><button class="icon-button delete" type="button" data-delete="${escapeHtml(event.href)}" aria-label="${escapeHtml(event.title)} ${t('delete')}" title="${t('delete')}">×</button></div></article>`;
     }).join('') : `<div class="empty-state">${t('empty')}</div>`;
     const addLabel = category.id === 'Geburtstage' ? t('addBirthday') : t('addEvent');
     const countLabel = events.length === 1 ? t('entry') : t('entries');
     const birthdayFilters = category.id === 'Geburtstage' ? `<div class="birthday-filters"><label><span class="visually-hidden">${t('birthdaySearch')}</span><input id="birthday-search" type="search" value="${escapeHtml(state.birthdaySearch)}" placeholder="${t('birthdaySearch')}"></label><label><span class="visually-hidden">${t('birthdayMonth')}</span><select id="birthday-month"><option value="">${t('allMonths')}</option>${Array.from({ length: 12 }, (_, index) => { const month = String(index + 1).padStart(2, '0'); const name = new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'de-DE', { month: 'long' }).format(new Date(2020, index, 1)); return `<option value="${month}"${state.birthdayMonth === month ? ' selected' : ''}>${escapeHtml(name)}</option>`; }).join('')}</select></label></div>` : '';
     return `<section class="category-card"><div class="category-head"><div class="category-title-wrap"><span class="category-symbol" style="background:${category.tint};color:${category.color}">${category.symbol}</span><div><h3>${escapeHtml(category.title)}</h3></div></div><span class="count">${events.length} ${countLabel}</span></div>${birthdayFilters}<div class="event-list">${rows}</div><button class="add-button" type="button" data-add="${escapeHtml(category.id)}"><span>＋</span> ${addLabel}</button></section>`;
   }).join('');
+  renderNextEvent();
 }
 function dateToIcs(date) { return date.replaceAll('-', ''); }
 function buildIcs(form, uid) {
@@ -221,6 +254,8 @@ $('header-menu-toggle').addEventListener('click', () => {
   $('header-menu-toggle').setAttribute('aria-expanded', String(expanded));
 });
 $('refresh-button').addEventListener('click', loadEvents);
+$('previous-event').addEventListener('click', () => { state.nextEventIndex -= 1; renderNextEvent(); });
+$('next-event').addEventListener('click', () => { state.nextEventIndex += 1; renderNextEvent(); });
 $('copy-url').addEventListener('click', async () => { try { await navigator.clipboard.writeText(state.calendarHref); toast('CalDAV-Adresse kopiert.'); } catch { $('subscription-url').select(); document.execCommand('copy'); toast('Adresse kopiert.'); } });
 document.addEventListener('input', e => {
   if (e.target.id !== 'birthday-search') return;

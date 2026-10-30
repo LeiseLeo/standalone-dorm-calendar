@@ -1,6 +1,6 @@
 {{ define "main" }}
   {{ partial "intro.html" . }}
-  {{ partial "subscribe.html" . }}
+  {{ partial "next-events.html" . }}
 
   <div class="section-heading">
     <div>
@@ -13,6 +13,7 @@
   <div id="loading" class="loading-state"><span class="spinner"></span><span>{{ i18n "loading" }}</span></div>
   <section id="categories" class="categories" aria-live="polite"></section>
 
+  {{ partial "subscribe.html" . }}
   {{ partial "footer.html" . }}
   {{ partial "dialogs/connection.html" . }}
   {{ partial "dialogs/event.html" . }}

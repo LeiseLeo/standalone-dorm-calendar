@@ -1,0 +1,14 @@
+<section id="next-events" class="next-events-card" aria-labelledby="next-events-title" aria-live="polite">
+  <div class="next-events-heading">
+    <div>
+      <p class="eyebrow">{{ i18n "next_events_eyebrow" }}</p>
+      <h2 id="next-events-title">{{ i18n "next_events_title" }}</h2>
+    </div>
+    <div class="next-events-navigation">
+      <button id="previous-event" class="icon-button" type="button" aria-label="{{ i18n "previous_event" }}" title="{{ i18n "previous_event" }}" disabled>←</button>
+      <span id="event-position" class="count"></span>
+      <button id="next-event" class="icon-button" type="button" aria-label="{{ i18n "next_event" }}" title="{{ i18n "next_event" }}" disabled>→</button>
+    </div>
+  </div>
+  <div id="next-event-content" class="next-event-content"></div>
+</section>

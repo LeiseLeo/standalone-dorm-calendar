@@ -24,14 +24,14 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        SITE_TITLE: ${SITE_TITLE:-WG-Kalender}
-        SITE_URL: ${SITE_URL:-http://localhost:8080/}
+        SITE_TITLE: ${SITE_TITLE:?Set SITE_TITLE in .env}
+        SITE_URL: ${SITE_URL:?Set SITE_URL in .env}
     container_name: wg-calendar-web
     restart: unless-stopped
     depends_on:
       - baikal
     ports:
-      - "${WEB_PORT:-8080}:80"
+      - "${WEB_PORT:?Set WEB_PORT in .env}:80"
 
 volumes:
   baikal-config:

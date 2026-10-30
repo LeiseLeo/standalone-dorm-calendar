@@ -16,9 +16,9 @@ Die Website ist auf Deutsch und Englisch verfügbar. Die Sprache kann über den 
    ```
 
 4. Öffnen:
-   - WG-Frontend: <http://localhost:8080>
-   - Baïkal-Administration: <http://localhost:8080/admin/>
-   - CalDAV-Endpunkt: <http://localhost:8080/dav.php/>
+   - WG-Frontend: die in `SITE_URL` konfigurierte URL
+   - Baïkal-Administration: `<SITE_URL>/admin/`
+   - CalDAV-Endpunkt: `<SITE_URL>/dav.php/`
 
 Es ist kein manueller Baïkal-Installationsassistent mehr erforderlich.
 
