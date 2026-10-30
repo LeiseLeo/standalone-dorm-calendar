@@ -1,8 +1,12 @@
 const locale = document.documentElement.lang.startsWith('en') ? 'en' : 'de';
 const translations = {
-  de: { birthdays: 'Geburtstage', organizational: 'Organisatorische Stocktermine', official: 'Offizielle Wohnheimtermine', birthdaySearch: 'Nach Name oder Beschreibung filtern', birthdayMonth: 'Nach Monat filtern', allMonths: 'Alle Monate', connected: 'Verbunden', connectionError: 'Verbindungsfehler', disconnected: 'Nicht verbunden', unknownDate: 'Datum unbekannt', yearly: 'jährlich', edit: 'Bearbeiten', delete: 'Löschen', empty: 'Noch keine Einträge vorhanden.', entry: 'Eintrag', entries: 'Einträge', addEvent: 'Ereignis hinzufügen', addBirthday: 'Geburtstag hinzufügen', editEntry: 'Ereignis bearbeiten', birthday: 'Geburtstag hinzufügen', birthdayPlaceholder: 'z. B. Geburtstag von Anna', eventPlaceholder: 'z. B. WG-Sitzung', authError: 'Anmeldung fehlgeschlagen oder keine Berechtigung für diesen Kalender. Prüfe Benutzername, Passwort und Baïkal-Berechtigungen.', calendarNotFound: 'Kalender nicht gefunden. Prüfe den Kalendernamen (standardmäßig „default“) und die CalDAV-Adresse.', baikalError: (status, text) => `Baïkal antwortet mit HTTP ${status} (${text}).`, unexpected: 'Baïkal hat eine unerwartete Antwort geliefert.', notCalendar: 'Die angegebene Ressource ist kein CalDAV-Kalender. Lege in Baïkal einen Benutzer mit Standardkalender an.', connectionEstablished: 'Verbindung hergestellt.', updated: 'Eintrag aktualisiert.', added: 'Eintrag hinzugefügt.', deleted: 'Eintrag gelöscht.', urlCopied: 'CalDAV-Adresse kopiert.', dark: 'Dunkelmodus aktivieren', light: 'Hellmodus aktivieren' },
-  en: { birthdays: 'Birthdays', organizational: 'Organizational dates', official: 'Residence events', birthdaySearch: 'Filter by name or description', birthdayMonth: 'Filter by month', allMonths: 'All months', connected: 'Connected', connectionError: 'Connection error', disconnected: 'Not connected', unknownDate: 'Unknown date', yearly: 'yearly', edit: 'Edit', delete: 'Delete', empty: 'No entries yet.', entry: 'entry', entries: 'entries', addEvent: 'Add event', addBirthday: 'Add birthday', editEntry: 'Edit event', birthday: 'Add birthday', birthdayPlaceholder: "e.g. Anna's birthday", eventPlaceholder: 'e.g. House meeting', authError: 'Login failed or you do not have permission for this calendar. Check the username, password, and Baïkal permissions.', calendarNotFound: 'Calendar not found. Check the calendar name (usually “default”) and the CalDAV address.', baikalError: (status, text) => `Baïkal returned HTTP ${status} (${text}).`, unexpected: 'Baïkal returned an unexpected response.', notCalendar: 'The specified resource is not a CalDAV calendar. Create a user with a default calendar in Baïkal.', connectionEstablished: 'Connection established.', updated: 'Entry updated.', added: 'Entry added.', deleted: 'Entry deleted.', urlCopied: 'CalDAV address copied.', dark: 'Enable dark mode', light: 'Enable light mode' },
+  de: { birthdays: 'Geburtstage', organizational: 'Organisatorische Stocktermine', official: 'Offizielle Wohnheimtermine', birthdaySearch: 'Nach Name oder Beschreibung filtern', birthdayMonth: 'Nach Monat filtern', allMonths: 'Alle Monate', connected: 'Verbunden', connectionError: 'Verbindungsfehler', disconnected: 'Nicht verbunden', unknownDate: 'Datum unbekannt', yearly: 'jährlich', edit: 'Bearbeiten', delete: 'Löschen', empty: 'Noch keine Einträge vorhanden.', entry: 'Eintrag', entries: 'Einträge', addEvent: 'Ereignis hinzufügen', addBirthday: 'Geburtstag hinzufügen', editEntry: 'Ereignis bearbeiten', birthday: 'Geburtstag hinzufügen', birthdayPlaceholder: 'z. B. Geburtstag von Anna', eventPlaceholder: 'z. B. WG-Sitzung', authError: 'Anmeldung fehlgeschlagen oder keine Berechtigung für diesen Kalender. Prüfe Benutzername, Passwort und Baïkal-Berechtigungen.', calendarNotFound: 'Kalender nicht gefunden. Prüfe den Kalendernamen (standardmäßig „default“) und die CalDAV-Adresse.', baikalError: (status, text) => `Baïkal antwortet mit HTTP ${status} (${text}).`, unexpected: 'Baïkal hat eine unerwartete Antwort geliefert.', notCalendar: 'Die angegebene Ressource ist kein CalDAV-Kalender. Lege in Baïkal einen Benutzer mit Standardkalender an.', connectionEstablished: 'Verbindung hergestellt.', updated: 'Eintrag aktualisiert.', added: 'Eintrag hinzugefügt.', deleted: 'Eintrag gelöscht.', urlCopied: 'CalDAV-Adresse kopiert.', shareCopied: 'Einladungslink kopiert.', dark: 'Dunkelmodus aktivieren', light: 'Hellmodus aktivieren' },
+  en: { birthdays: 'Birthdays', organizational: 'Organizational dates', official: 'Residence events', birthdaySearch: 'Filter by name or description', birthdayMonth: 'Filter by month', allMonths: 'All months', connected: 'Connected', connectionError: 'Connection error', disconnected: 'Not connected', unknownDate: 'Unknown date', yearly: 'yearly', edit: 'Edit', delete: 'Delete', empty: 'No entries yet.', entry: 'entry', entries: 'entries', addEvent: 'Add event', addBirthday: 'Add birthday', editEntry: 'Edit event', birthday: 'Add birthday', birthdayPlaceholder: "e.g. Anna's birthday", eventPlaceholder: 'e.g. House meeting', authError: 'Login failed or you do not have permission for this calendar. Check the username, password, and Baïkal permissions.', calendarNotFound: 'Calendar not found. Check the calendar name (usually “default“) and the CalDAV address.', baikalError: (status, text) => `Baïkal returned HTTP ${status} (${text}).`, unexpected: 'Baïkal returned an unexpected response.', notCalendar: 'The specified resource is not a CalDAV calendar. Create a user with a default calendar in Baïkal.', connectionEstablished: 'Connection established.', updated: 'Entry updated.', added: 'Entry added.', deleted: 'Entry deleted.', urlCopied: 'CalDAV address copied.', shareCopied: 'Invitation link copied.', dark: 'Enable dark mode', light: 'Enable light mode' },
 };
+translations.de.shareDashboard = 'WG-Kalender teilen';
+translations.de.shareCopyError = 'Einladungslink konnte nicht kopiert werden.';
+translations.en.shareDashboard = 'Share WG calendar';
+translations.en.shareCopyError = 'The invitation link could not be copied.';
 const t = (key, ...args) => typeof translations[locale][key] === 'function' ? translations[locale][key](...args) : translations[locale][key];
 const CATEGORIES = [
   { id: 'Geburtstage', title: t('birthdays'), symbol: '✳', tint: '#fceef1', color: '#c56b83' },
@@ -15,6 +19,7 @@ const SESSION_KEY = 'wg-calendar-connection';
 
 function escapeHtml(value = '') { return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function utf8Base64(value) { const bytes = new TextEncoder().encode(value); let binary = ''; bytes.forEach(b => binary += String.fromCharCode(b)); return btoa(binary); }
+function base64Utf8(value) { const binary = atob(value); return new TextDecoder().decode(Uint8Array.from(binary, character => character.charCodeAt(0))); }
 function absoluteUrl(path) { return new URL(path, window.location.origin).toString(); }
 function normalizePath(path) { return path.endsWith('/') ? path : `${path}/`; }
 function authHeaders(extra = {}) { return { Authorization: `Basic ${utf8Base64(`${state.username}:${state.password}`)}`, ...extra }; }
@@ -42,6 +47,34 @@ function saveConnection() {
     caldavUrl: state.caldavUrl,
   }));
 }
+function loadSharedConnection() {
+  const marker = '#share=';
+  if (!window.location.hash.startsWith(marker)) return false;
+  try {
+    const encoded = decodeURIComponent(window.location.hash.slice(marker.length));
+    const connection = JSON.parse(base64Utf8(encoded));
+    if (!connection.username || !connection.password) throw new Error('Invalid share link');
+    state.username = connection.username;
+    state.password = connection.password;
+    state.calendarName = connection.calendarName || 'default';
+    state.caldavUrl = connection.caldavUrl || '/dav.php/';
+    saveConnection();
+    window.history.replaceState(null, document.title, `${window.location.pathname}${window.location.search}`);
+    return true;
+  } catch {
+    window.history.replaceState(null, document.title, `${window.location.pathname}${window.location.search}`);
+    return false;
+  }
+}
+function createShareLink() {
+  const payload = utf8Base64(JSON.stringify({
+    username: state.username,
+    password: state.password,
+    calendarName: state.calendarName,
+    caldavUrl: state.caldavUrl,
+  }));
+  return `${window.location.href.split('#')[0]}#share=${encodeURIComponent(payload)}`;
+}
 async function davRequest(url, method, body = null, headers = {}) {
   const response = await fetch(url, { method, headers: authHeaders(headers), body, credentials: 'same-origin' });
   if (!response.ok) {
@@ -63,6 +96,7 @@ async function connect() {
   state.connected = true;
   $('subscription-url').value = state.calendarHref;
   $('copy-url').disabled = false;
+  $('share-dashboard').disabled = false;
   $('refresh-button').disabled = false;
   setConnectionStatus('online', t('connected'));
   await loadEvents();
@@ -255,6 +289,18 @@ $('refresh-button').addEventListener('click', loadEvents);
 $('previous-event').addEventListener('click', () => { state.nextEventIndex -= 1; renderNextEvent(); });
 $('next-event').addEventListener('click', () => { state.nextEventIndex += 1; renderNextEvent(); });
 $('copy-url').addEventListener('click', async () => { try { await navigator.clipboard.writeText(state.calendarHref); toast('CalDAV-Adresse kopiert.'); } catch { $('subscription-url').select(); document.execCommand('copy'); toast('Adresse kopiert.'); } });
+$('share-dashboard').addEventListener('click', async () => {
+  const url = createShareLink();
+  try {
+    if (navigator.share) await navigator.share({ title: document.title, text: t('shareDashboard'), url });
+    else await navigator.clipboard.writeText(url);
+    toast(t('shareCopied'));
+  } catch (error) {
+    if (error.name !== 'AbortError') {
+      try { await navigator.clipboard.writeText(url); toast(t('shareCopied')); } catch { showError(t('shareCopyError')); }
+    }
+  }
+});
 document.addEventListener('input', e => {
   if (e.target.id !== 'birthday-search') return;
   state.birthdaySearch = e.target.value;
@@ -291,7 +337,8 @@ $('theme-toggle').addEventListener('click', () => {
   applyTheme(theme);
 });
 window.addEventListener('DOMContentLoaded', async () => {
-  if (!loadConnection()) {
+  const shared = loadSharedConnection();
+  if (!shared && !loadConnection()) {
     showConnectionDialog();
     return;
   }

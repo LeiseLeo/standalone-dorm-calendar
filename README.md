@@ -59,6 +59,7 @@ Wenn bereits eine Konfiguration existiert, bleibt die Datenbank erhalten. Beim e
 - Vor öffentlicher Bereitstellung HTTPS aktivieren.
 - `.env` enthält Klartext-Passwörter und darf nicht in Git eingecheckt werden.
 - Baïkal-Admin-Benutzername ist fest `admin`; Baïkal bietet hierfür keine frei konfigurierbare Admin-Username-Variable.
+- Der Button „Dashboard teilen“ erzeugt einen Einladungslink mit den Zugangsdaten im URL-Fragment. Das Fragment wird nicht an den Server übertragen und nach der automatischen Anmeldung aus der sichtbaren URL entfernt. Teile solche Links nur mit vertrauenswürdigen Personen und verwende HTTPS.
 
 ## Nützliche Befehle
 
