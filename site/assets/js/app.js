@@ -93,7 +93,7 @@ async function connect() {
   if (xml.querySelector('parsererror')) throw new Error(t('unexpected'));
   if (!xml.getElementsByTagNameNS('*', 'calendar')[0]) throw new Error(t('notCalendar'));
   state.calendarHref = absoluteUrl(href);
-  state.subscriptionHref = `${state.calendarHref}?export&accept=ical`;
+  state.subscriptionHref = absoluteUrl('/public-calendar/wg.ics');
   state.connected = true;
   $('subscription-url').value = state.subscriptionHref;
   $('copy-url').disabled = false;
